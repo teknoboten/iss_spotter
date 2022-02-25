@@ -30,16 +30,42 @@ const fetchCoordsByIP = (ip, callback) => {
     }
 
     const { latitude, longitude } = JSON.parse(body);
-    const data = { latitude, longitude };
   
-    callback(null, data);
+    callback(null, { latitude, longitude });
   });
 };
 
 
 
+ const fetchISSFlyOverTime = (coords, callback) => {
 
-module.exports = { fetchIp, fetchCoordsByIP };
+  request(`https://iss-pass.herokuapp.com/json/?lat=${coords.latitude}&lon=${coords.longitude}`, (error, response, body) => {
+
+    if (error) return callback(error, null);
+
+    if (response.statusCode !== 200){
+      const msg = `you got an error! status: ${body}`;
+      callback(Error(msg), null);
+      return;
+    };
+
+    const flyOverTimes = JSON.parse(body).response;
+
+    callback(null, flyOverTimes);
+
+  })
+
+ }
+
+
+
+
+
+
+ 
+
+
+module.exports = { fetchIp, fetchCoordsByIP, fetchISSFlyOverTime };
 
 
 // curl 'https://api.freegeoip.app/json/8.8.8.8?apikey=4f04d160-95d6-11ec-a16b-856b01e70b08'
