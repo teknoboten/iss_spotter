@@ -4,10 +4,7 @@ const fetchIp = (callback) => {
 
   request('https://api.ipify.org?format=json', (error, response, body) => {
 
-    if (error) {
-      callback(error, null);
-      return;
-    }
+    if (error) return callback(error, null);
 
     if (response.statusCode !== 200) {
       const msg = `status code: ${response.statusCode} when fetching ip.\nresponse: ${body}`;
@@ -15,13 +12,9 @@ const fetchIp = (callback) => {
       return;
     }
 
-    if (response) {
-      const ip = JSON.parse(body).ip;
-      callback(null, ip);
-    }
-
+    const ip = JSON.parse(body).ip;
+    callback(null, ip);
   });
-    
 };
 
 
